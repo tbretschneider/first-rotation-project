@@ -10,8 +10,8 @@
 \graphicspath{{graphics/}}
 
 \title{Conceptual framework}
-\author[The Tufte-LaTeX Developers]{The Tufte-\LaTeX\ Developers}
-\date{24 January 2009}  % if the \date{} command is left out, the current date will be used
+% \author[Tobi]{Tobias Bretschneider}
+\date{}  % if the \date{} command is left out, the current date will be used
 
 % The following package makes prettier tables.  We're all about the bling!
 \usepackage{booktabs}
@@ -45,11 +45,11 @@
 
 \maketitle% this prints the handout title, author, and date
 
-\begin{abstract}
-\noindent This document describes the Tufte handout \LaTeX\ document style.
-It also provides examples and comments on the style's use.  Only a brief
-overview is presented here; for a complete reference, see the sample book.
-\end{abstract}
+% \begin{abstract}
+% \noindent This document describes the Tufte handout \LaTeX\ document style.
+% It also provides examples and comments on the style's use.  Only a brief
+% overview is presented here; for a complete reference, see the sample book.
+% \end{abstract}
 
 %\printclassoptions
 
@@ -69,7 +69,7 @@ The Tufte-\LaTeX\ classes will emit an error if you try to use
 \linebreak\Verb|\subsubsection| and smaller headings.
 
 % let's start a new thought -- a new section
-\newthought{In his later books},\cite{Tufte2006} Tufte
+\newthought{In his later books},\cite{Sun2025} Tufte
 starts each section with a bit of vertical space, a non-indented paragraph,
 and sets the first few words of the sentence in \textsc{small caps}.  To
 accomplish this using this style, use the \Verb|\newthought| command:  
@@ -267,20 +267,6 @@ however.  This allows one to use both uppercase and lowercase letters:
 
 
 
-\section{Installation}\label{sec:installation}
-To install the Tufte-\LaTeX\ classes, simply drop the
-following files into the same directory as your \texttt{.tex}
-file:
-\begin{quote}
-  \ttfamily
-  tufte-common.def\\
-  tufte-handout.cls\\
-  tufte-book.cls
-\end{quote}
-
-% TODO add instructions for installing it globally
-
-
 
 \section{More Documentation}\label{sec:more-doc}
 For more documentation on the Tufte-\LaTeX{} document classes (including commands not
@@ -292,7 +278,7 @@ The website for the Tufte-\LaTeX\ packages is located at
 \url{http://code.google.com/p/tufte-latex/}.  On our website, you'll find
 links to our \smallcaps{svn} repository, mailing lists, bug tracker, and documentation.
 
-\bibliography{sample-handout}
+\bibliography{../first-rotation-project.bib}
 \bibliographystyle{plainnat}
 
 
