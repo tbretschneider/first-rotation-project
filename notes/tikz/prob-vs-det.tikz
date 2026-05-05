@@ -1,0 +1,61 @@
+\begin{tikzpicture}[
+    thick,
+    node distance=2.5cm,
+    every node/.style={font=\large},
+    box/.style={draw, rounded corners, fill=#1!20, inner sep=10pt},
+    arrow/.style={->, thick},
+    dashedarrow/.style={->, dashed, thick},
+    dottedarrow/.style={->, dotted, thick}
+]
+
+% Nodes
+\node (M) {$\mathcal{M}$};
+\node[right=1cm of M] (X) {$\mathcal{X}$};
+\node[above=1.5cm of X] (Theta) {$\Theta$};
+
+\node[above right=0.75cm and 1cm of X] (Ntheta) {$N_\theta$};
+
+\node[above right=1.5cm and 3cm of X] (Lambda) {$\Lambda$};
+\node[right=2cm of Lambda] (P) {$\mathcal{P}$};
+\node[right=2cm of P] (PY) {$\mathcal{Y}$};
+
+\node[right=3cm of X] (Y) {$\mathcal{Y}$};
+
+% Arrows into N_theta
+\draw (X) to[out=20, in=-160] (Ntheta.south west);
+\draw (Theta) to[out=-20, in=160] (Ntheta.south west);
+
+% Line below N_theta
+\draw (Ntheta.south west) -- (Ntheta.south east);
+
+\draw[arrow] (Ntheta.south east) to[out=20, in=-160] (Lambda);
+\draw[arrow] (Ntheta.south east) to[out=-20, in=160] (Y);
+
+\draw[arrow] (Lambda) -- node[midway, above] {$\cong$} (P);
+\draw[arrow] (P) -- node[midway, above] {\small sample} (PY);
+
+% Dotted arrow from M to X
+\draw[dottedarrow] (M) -- (X);
+
+% --- Boxes (background layer so they sit behind) ---
+\begin{scope}[on background layer]
+
+% Probabilistic (green)
+\node[draw, rounded corners, fill=green!20, inner sep=12pt,
+      fit=(Lambda) (P) (PY),
+      label={[font=\normalsize]above:Probabilistic view}] (probbox) {};
+
+% Deterministic (pink)
+\node[draw, rounded corners, fill=pink!20, inner sep=12pt,
+      fit=(Y),
+      label={[font=\normalsize]below:Deterministic view}] (detbox) {};
+
+\end{scope}
+
+% Curved dotted arrow between boxes
+\draw[dottedarrow]
+    (probbox.south) to[out=-20, in=0]
+    node[midway, right] {\small Dirac distributions}
+    (detbox.east);
+
+\end{tikzpicture}
