@@ -69,7 +69,7 @@ the parameter space, or the data space.
   \caption{Probabilistic vs. Deterministic view of neural nets.
 }
 \input{tikz/prob-vs-det.tikz}
-  \label{fig:probabilisticvsdeterministicview}
+  \label{fig:prob-vs-det}
   %\zsavepos{pos:textfig}
   %\setfloatalignment{b}
 \end{figure}
@@ -81,230 +81,95 @@ interest (the deterministic view), alternatively we output parameters, $\lambda 
 \Lambda$, which correspond to a probability distribution from which we can sample.
 
 The deterministic view point is used by:
+\begin{itemize}
+    \item All papers from the AGOP community\cite[-4cm]{Radhakrishnan2024,DePavia2025}; and,
+    \item work on representation similarity analysis\cite{Cayco_Gajic2026}.
+\end{itemize}
+Whereas the probabilistic viewpoint is the focus on works revolving around the DIM (Data Information Matrix), see \cite{Tron2025}.
 
+In a sense the probabilistic view is more general as we can obtain the deterministic view by treating the probability distributions as Dirac delta ones.
 
+For an overview see figure~\ref{fig:prob-vs-det}.
 
-All papers in the AGOP community\cite{Radhakrishnan2024,DePavia2025} use the
-deterministic viewpoint (including\citeauthor{Cayco_Gajic2026} ) 
+\section{The metrics}
 
-\cite{Tron2025}
+The standard metric over statistical manifolds\cite{Amari2007} can be used in the probabilistic case. So we have a Riemannian metric on the space $\Lambda$ given by,
+\begin{equation}
+F_{i,j}(\lambda)
+:=
+\mathbb{E}_{Y \mid \lambda}
+\left[
+\frac{\partial}{\partial \lambda_i} \log p(Y \mid \lambda)
+\;
+\frac{\partial}{\partial \lambda_j} \log p(Y \mid \lambda)
+\right].
+\end{equation}
 
+For the deterministic case, assuming that our data has reached some sort of ``flat'' representation\cite{Cayco_Gajic2026} we have the standard Euclidean metric,
+\begin{equation}
+g_{i,j}(y) := \delta_{i,j}.
+\end{equation}
 
+\section{Pulled-back metrics}
 
+It is of interest to have a ``correct'' metric on the input space. This allows one to:
+\begin{itemize}
+    \item have an epsilon-delta relationship between inputs and outputs\cite{Hauser2017};
+    \item have a geometric picture of what the network is doing;
+    \item analyse phenomena with regards to their different geometric impacts\cite{Brandon2025};
+    \item hypothesise geometry inspired regularisation schemes; and,
+    \item propose more ``correct'' adversarial robustness training algorithms\cite{Tron2022}.
+\end{itemize}
 
-The Tufte-\LaTeX\ document classes define a style similar to the
-style Edward Tufte uses in his books and handouts.  Tufte's style is known
-for its extensive use of sidenotes, tight integration of graphics with
-text, and well-set typography.  This document aims to be at once a
-demonstration of the features of the Tufte-\LaTeX\ document classes
-and a style guide to their use.
+Use the idea of the pull-back metric from Riemannian geometry, one can take either of the metrics above and pull them back to either the input space, $\mathcal{X}$, or the network parameter space, $\Theta$. First we consider pulling back the probabilistic case.
 
-\section{Page Layout}\label{sec:page-layout}
-\subsection{Headings}\label{sec:headings}
-This style provides \textsc{a}- and \textsc{b}-heads (that is,
-\Verb|\section| and \Verb|\subsection|), demonstrated above.
+\subsection{Pulling-back the Fisher-Rao geometry}
 
-The Tufte-\LaTeX\ classes will emit an error if you try to use
-\linebreak\Verb|\subsubsection| and smaller headings.
+Computing the metric pull back gives the following two expressions. Importantly both of these depend on both $\theta$ and $x$. $F$ is usually recognised as the Fisher information matrix (FIM), and in most cases the dependence on $x$ is removed by taking an expectation over $x$. $D$ mostly referred to as the Data information matrix (DIM) is a lot less well studied\cite{Grementieri2022,Tron2025}.
 
-% let's start a new thought -- a new section
-\newthought{In his later books},\cite{Sun2025} Tufte
-starts each section with a bit of vertical space, a non-indented paragraph,
-and sets the first few words of the sentence in \textsc{small caps}.  To
-accomplish this using this style, use the \Verb|\newthought| command:  
-\begin{docspec}
-  \doccmd{newthought\{In his later books\}, Tufte starts\ldots}
-\end{docspec}
+\begin{equation}
+F_{i,j}(\theta)
+:=
+\mathbb{E}_{Y \mid \theta}
+\left[
+\frac{\partial}{\partial \theta_i} \log p(Y \mid \theta)
+\;
+\frac{\partial}{\partial \theta_j} \log p(Y \mid \theta)
+\right].
+\end{equation}
 
-\subsection{Sidenotes}\label{sec:sidenotes}
-One of the most prominent and distinctive features of this style is the
-extensive use of sidenotes.  There is a wide margin to provide ample room
-for sidenotes and small figures.  Any \Verb|\footnote|s will automatically
-be converted to sidenotes.\footnote{This is a sidenote that was entered
-using the \texttt{\textbackslash footnote} command.}  If you'd like to place ancillary
-information in the margin without the sidenote mark (the superscript
-number), you can use the \Verb|\marginnote| command.\marginnote{This is a
-margin note.  Notice that there isn't a number preceding the note, and
-there is no number in the main text where this note was written.}
+\begin{equation}
+D_{i,j}(x)
+:=
+\mathbb{E}_{Y \mid x}
+\left[
+\frac{\partial}{\partial x_i} \log p(Y \mid x)
+\;
+\frac{\partial}{\partial x_j} \log p(Y \mid x)
+\right].
+\end{equation}
 
-The specification of the \Verb|\sidenote| command is:
-\begin{docspec}
-  \doccmd{sidenote[\docopt{number}][\docopt{offset}]\{\docarg{Sidenote text.}\}}
-\end{docspec}
+\subsection{Pulling-back in the deterministic setting}
 
-Both the \docopt{number} and \docopt{offset} arguments are optional.  If you
-provide a \docopt{number} argument, then that number will be used as the
-sidenote number.  It will change of the number of the current sidenote only and
-will not affect the numbering sequence of subsequent sidenotes.
+Pulling back to the data space in the deterministic setting gives,
+\begin{equation}
+G(x)
+:=
+\frac{\partial N_\theta(x)}{\partial x}^T
+\;
+\frac{\partial N_\theta(x)}{\partial x},
+\end{equation}
+i.e. the gram matrix of the Jacobians of $N_\theta$ wrt to $x$. If the dependence on $x$ is removed by taken the expectation over it, then we obtain what is usually referred to as the AGOP (or EGOP, AJOP, and EJOP). There can be a dependence on certain layers by only pulling back to the $l$th layer, matching the definition of Belkin\cite{Radhakrishnan2024}.
 
-Sometimes a sidenote may run over the top of other text or graphics in the
-margin space.  If this happens, you can adjust the vertical position of the
-sidenote by providing a dimension in the \docopt{offset} argument.  Some
-examples of valid dimensions are:
-\begin{docspec}
-  \ttfamily 1.0in \qquad 2.54cm \qquad 254mm \qquad 6\Verb|\baselineskip|
-\end{docspec}
-If the dimension is positive it will push the sidenote down the page; if the
-dimension is negative, it will move the sidenote up the page.
+One can further assumes the existence of a data manifold and pulls back further to this (giving some favourable properties).
 
-While both the \docopt{number} and \docopt{offset} arguments are optional, they
-must be provided in order.  To adjust the vertical position of the sidenote
-while leaving the sidenote number alone, use the following syntax:
-\begin{docspec}
-  \doccmd{sidenote[][\docopt{offset}]\{\docarg{Sidenote text.}\}}
-\end{docspec}
-The empty brackets tell the \Verb|\sidenote| command to use the default
-sidenote number.
+As for pulling back to the network parameter space this is also possible but in the literature the loss is usually pulled back. After taking expectations over $x$ one then gets the EGOP from Willet's work\cite{DePavia2025} (which is essentially an analogue of natural gradient methods in the deterministic setting).
 
-If you \emph{only} want to change the sidenote number, however, you may
-completely omit the \docopt{offset} argument:
-\begin{docspec}
-  \doccmd{sidenote[\docopt{number}]\{\docarg{Sidenote text.}\}}
-\end{docspec}
+\section{The resulting geometries}
 
-The \Verb|\marginnote| command has a similar \docarg{offset} argument:
-\begin{docspec}
-  \doccmd{marginnote[\docopt{offset}]\{\docarg{Margin note text.}\}}
-\end{docspec}
+Apart from in the case of\cite{Cayco_Gajic2026}, where one pulls back all the way to the data manifold, $\mathcal{M}$, one tends to get a singular metric. There are a number of approaches to dealing with this, both on the data space and the parameter space. On the data space we can look at the singular geometry\cite{Benfenati2024} and use things like foliations\cite{Tron2024} to understand it. Whereas in the parameter space there is the singular learning theory that has proved important.
 
-\subsection{References}
-References are placed alongside their citations as sidenotes,
-as well.  This can be accomplished using the normal \Verb|\cite|
-command.\sidenote{The first paragraph of this document includes a citation.}
-
-The complete list of references may also be printed automatically by using
-the \Verb|\bibliography| command.  (See the end of this document for an
-example.)  If you do not want to print a bibliography at the end of your
-document, use the \Verb|\nobibliography| command in its place.  
-
-To enter multiple citations at one location,\cite{Tufte2006,Tufte1990} you can
-provide a list of keys separated by commas and the same optional vertical
-offset argument: \Verb|\cite{Tufte2006,Tufte1990}|.  
-\begin{docspec}
-  \doccmd{cite[\docopt{offset}]\{\docarg{bibkey1,bibkey2,\ldots}\}}
-\end{docspec}
-
-\section{Figures and Tables}\label{sec:figures-and-tables}
-Images and graphics play an integral role in Tufte's work.
-In addition to the standard \docenv{figure} and \docenv{tabular} environments,
-this style provides special figure and table environments for full-width
-floats.
-
-Full page--width figures and tables may be placed in \docenv{figure*} or
-\docenv{table*} environments.  To place figures or tables in the margin,
-use the \docenv{marginfigure} or \docenv{margintable} environments as follows
-(see figure~\ref{fig:marginfig}):
-
-\begin{marginfigure}%
-  \includegraphics[width=\linewidth]{helix}
-  \caption{This is a margin figure.  The helix is defined by 
-    $x = \cos(2\pi z)$, $y = \sin(2\pi z)$, and $z = [0, 2.7]$.  The figure was
-    drawn using Asymptote (\url{http://asymptote.sf.net/}).}
-  \label{fig:marginfig}
-\end{marginfigure}
-\begin{Verbatim}
-\begin{marginfigure}
-  \includegraphics{helix}
-  \caption{This is a margin figure.}
-\end{marginfigure}
-\end{Verbatim}
-
-The \docenv{marginfigure} and \docenv{margintable} environments accept an optional parameter \docopt{offset} that adjusts the vertical position of the figure or table.  See the ``\nameref{sec:sidenotes}'' section above for examples.  The specifications are:
-\begin{docspec}
-  \doccmd{begin\{marginfigure\}[\docopt{offset}]}\\
-  \qquad\ldots\\
-  \doccmd{end\{marginfigure\}}\\
-  \mbox{}\\
-  \doccmd{begin\{margintable\}[\docopt{offset}]}\\
-  \qquad\ldots\\
-  \doccmd{end\{margintable\}}\\
-\end{docspec}
-
-Figure~\ref{fig:fullfig} is an example of the \Verb|figure*|
-environment and figure~\ref{fig:textfig} is an example of the normal
-\Verb|figure| environment.
-
-
-
-Table~\ref{tab:normaltab} shows table created with the \docpkg{booktabs}
-package.  Notice the lack of vertical rules---they serve only to clutter
-the table's data.
-
-\begin{table}[ht]
-  \centering
-  \fontfamily{ppl}\selectfont
-  \begin{tabular}{ll}
-    \toprule
-    Margin & Length \\
-    \midrule
-    Paper width & \unit[8\nicefrac{1}{2}]{inches} \\
-    Paper height & \unit[11]{inches} \\
-    Textblock width & \unit[6\nicefrac{1}{2}]{inches} \\
-    Textblock/sidenote gutter & \unit[\nicefrac{3}{8}]{inches} \\
-    Sidenote width & \unit[2]{inches} \\
-    \bottomrule
-  \end{tabular}
-  \caption{Here are the dimensions of the various margins used in the Tufte-handout class.}
-  \label{tab:normaltab}
-  %\zsavepos{pos:normaltab}
-\end{table}
-
-\section{Full-width text blocks}
-
-In addition to the new float types, there is a \docenv{fullwidth}
-environment that stretches across the main text block and the sidenotes
-area.
-
-\begin{Verbatim}
-\begin{fullwidth}
-Lorem ipsum dolor sit amet...
-\end{fullwidth}
-\end{Verbatim}
-
-\begin{fullwidth}
-\small\itshape\lipsum[1]
-\end{fullwidth}
-
-\section{Typography}\label{sec:typography}
-
-\subsection{Typefaces}\label{sec:typefaces}
-If the Palatino, \textsf{Helvetica}, and \texttt{Bera Mono} typefaces are installed, this style
-will use them automatically.  Otherwise, we'll fall back on the Computer Modern
-typefaces.
-
-\subsection{Letterspacing}\label{sec:letterspacing}
-This document class includes two new commands and some improvements on
-existing commands for letterspacing.
-
-When setting strings of \allcaps{ALL CAPS} or \smallcaps{small caps}, the
-letter\-spacing---that is, the spacing between the letters---should be
-increased slightly.\cite{Bringhurst2005}  The \Verb|\allcaps| command has proper letterspacing for
-strings of \allcaps{FULL CAPITAL LETTERS}, and the \Verb|\smallcaps| command
-has letterspacing for \smallcaps{small capital letters}.  These commands
-will also automatically convert the case of the text to upper- or
-lowercase, respectively.
-
-The \Verb|\textsc| command has also been redefined to include
-letterspacing.  The case of the \Verb|\textsc| argument is left as is,
-however.  This allows one to use both uppercase and lowercase letters:
-\textsc{The Initial Letters Of The Words In This Sentence Are Capitalized.}
-
-
-
-
-\section{More Documentation}\label{sec:more-doc}
-For more documentation on the Tufte-\LaTeX{} document classes (including commands not
-mentioned in this handout), please see the sample book.
-
-\section{Support}\label{sec:support}
-
-The website for the Tufte-\LaTeX\ packages is located at
-\url{http://code.google.com/p/tufte-latex/}.  On our website, you'll find
-links to our \smallcaps{svn} repository, mailing lists, bug tracker, and documentation.
-
-\bibliography{../first-rotation-project.bib}
-\bibliographystyle{plainnat}
-
-
+\bibliography{first-rotation-project.bib}
+\bibliographystyle{alpha}
 
 \end{document}
